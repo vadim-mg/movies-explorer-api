@@ -57,7 +57,7 @@ const movieSchema = new mongoose.Schema({
   // _id пользователя, который сохранил фильм.
   owner: {
     type: mongoose.Schema.Types.ObjectId,
-    red: 'user',
+    ref: 'user',
     required: true,
   },
 
