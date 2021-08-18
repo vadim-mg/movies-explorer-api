@@ -25,7 +25,7 @@ const getCurrentUser = (req, res) => {
 
 const updateCurrentUser = (req, res, next) => {
   const { name, email } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name, email }, { new: true, runValidators: true, select: 'name email' })
+  return User.findByIdAndUpdate(req.user._id, { name, email }, { new: true, runValidators: true, select: 'name email' })
     .orFail(() => new Error('NotFound'))
     .then((user) => res.send(user))
     .catch((err) => {
