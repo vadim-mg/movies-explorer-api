@@ -1,12 +1,19 @@
-module.exports = (err, req, res, next) => {
-  const { statusCode } = err;
-  let { message } = err;
+const { Error400, Error500 } = require('../errors/errors');
 
-  if (statusCode === 500) {
-    message = `На сервере произошла ошибка: ${message}`;
+module.exports = (err, req, res, next) => {
+  let error = err;
+
+  // обрабатываем 400-е ошибки, вызванные не Celebrete
+  if (err.statusCode === 400 || err.name === 'CastError') {
+    error = new Error400(`Ошибка запроса: ${err.message}`);
   }
 
-  res.status(statusCode).send({ message });
+  // обрабатываем ошибку сервера
+  if (err.statusCode === 500) {
+    error = new Error500(`На сервере произошла ошибка: ${err.message}`);
+  }
+
+  res.status(error.statusCode).send({ message: error.message });
 
   next();
 };

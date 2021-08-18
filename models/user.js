@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const validator = require('validator');
-const Error401 = require('../errors/error-401');
+const { Error401 } = require('../errors/errors');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -25,8 +25,7 @@ const userSchema = new mongoose.Schema({
   versionKey: false,
 });
 
-// eslint-disable-next-line func-names
-userSchema.pre('save', function (next) {
+userSchema.pre('save', function bcryptPass(next) {
   if (this.isModified('password')) {
     return bcrypt.hash(this.password, 10)
       .then((hash) => {
@@ -45,14 +44,8 @@ userSchema.statics.findUserByCredentials = function findUserByCredentials(email,
       if (!user) {
         return Promise.reject(new Error401(errorMessage));
       }
-
       return bcrypt.compare(password, user.password)
-        .then((matched) => {
-          if (!matched) {
-            return Promise.reject(new Error401(errorMessage));
-          }
-          return user;
-        });
+        .then((matched) => (matched ? user : Promise.reject(new Error401(errorMessage))));
     });
 };
 
