@@ -1,16 +1,28 @@
+const { celebrate } = require('celebrate');
+
 const routes = require('express').Router();
-const signRouter = require('./sign');
+const auth = require('../middlewares/auth');
 const usersRouter = require('./users');
 const moviesRouter = require('./movies');
-const auth = require('../middlewares/auth');
-const { Error404 } = require('../errors/errors');
 
-routes.use('/', signRouter);
+const userSchema = require('../schemas/userSchema');
+const errors = require('../errors/errors');
+
+const { signup, signin, signout } = require('../controllers/auth');
+
+// не защищенные роуты
+routes.post('/signup', celebrate(userSchema.registerData), signup);
+routes.post('/signin', celebrate(userSchema.loginData), signin);
+
 routes.use(auth);
+
+// защищенные роуты
 routes.use('/users', usersRouter);
 routes.use('/movies', moviesRouter);
+routes.post('/signout', signout);
+
 routes.use('/', (req) => {
-  throw new Error404(`Не найден запрошенный роут:  ${req.url}`);
+  throw new errors.Error404(`Не найден запрошенный роут:  ${req.url}`);
 });
 
 module.exports = { routes };

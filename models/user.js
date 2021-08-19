@@ -6,6 +6,7 @@ const { Error401 } = require('../errors/errors');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
+    required: true,
     minlength: 2,
     maxlength: 30,
   },
@@ -14,7 +15,6 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
     validate: (v) => validator.isEmail(v),
-    select: false,
   },
   password: {
     type: String,
