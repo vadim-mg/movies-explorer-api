@@ -2,6 +2,7 @@ const DEVELOPMENT_ALLOWED_CORS = "['http://localhost:3001', 'https://localhost:3
 const DEVELOPMENT_SECRET = 'dev-secret';
 const DEVELOPMENT_DBASE = 'mongodb://localhost:27017/moviesdb';
 const DEVELOPMENT_PORT = 3000;
+const DEVELOPMENT_RATE_LIMIT = 200; // кол-во запросов в минут с одного IP
 
 const prodMode = process.env.NODE_ENV === 'production';
 
@@ -18,4 +19,7 @@ module.exports = {
   dataBase: prodMode
     ? process.env.DATA_BASE
     : DEVELOPMENT_DBASE,
+  maxRateLimit: prodMode
+    ? process.env.RATE_LIMIT
+    : DEVELOPMENT_RATE_LIMIT,
 };

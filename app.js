@@ -12,6 +12,7 @@ const { routes } = require('./routes/index');
 const errorHandler = require('./middlewares/errorHandler');
 const { dataBase, port } = require('./utils/config');
 const { cors } = require('./middlewares/cors');
+const rateLimiter = require('./middlewares/rateLimiter');
 
 mongoose.connect(dataBase, {
   useNewUrlParser: true,
@@ -23,6 +24,7 @@ mongoose.connect(dataBase, {
 const app = express();
 
 app.use(cors);
+app.use(rateLimiter);
 app.use(helmet());
 app.disable('x-powered-by');
 
