@@ -1,7 +1,5 @@
 const Movie = require('../models/movie');
-const {
-  Error403, Error404, Error409,
-} = require('../errors/errors');
+const errors = require('../errors/errors');
 
 const getMovies = (req, res, next) => Movie.find({})
   .populate({
@@ -18,7 +16,7 @@ const createMovie = (req, res, next) => {
   Movie.find(newMovie)
     .then((movie) => {
       if (movie.length !== 0) {
-        throw new Error409('Этот фильм уже добавлен данным пользователем');
+        throw new errors.Error409('Этот фильм уже добавлен данным пользователем');
       }
       return 'OK';
     })
@@ -33,10 +31,10 @@ const createMovie = (req, res, next) => {
 };
 
 const deleteMovie = (req, res, next) => Movie.findById(req.params.movieId)
-  .orFail(() => new Error404('Фильм с указанным _id не найден'))
+  .orFail(() => new errors.Error404('Фильм с указанным _id не найден'))
   .then((movie) => {
     if (String(movie.owner._id) !== String(req.user._id)) {
-      return Promise.reject(new Error403('Не достаточно прав доступа'));
+      return Promise.reject(new errors.Error403('Не достаточно прав доступа'));
     }
     return Movie.findByIdAndDelete(movie._id)
       .then((c) => res.send(c));

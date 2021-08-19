@@ -5,7 +5,7 @@ const User = require('../models/user');
 const { Error409 } = require('../errors/errors');
 
 const signup = (req, res, next) => User.create(req.body)
-  .then((user) => res.send({ userId: user._id }))
+  .then(() => res.send({ message: 'Пользователь зарегистрирован' }))
   .catch((err) => {
     if (err.name === 'MongoError' && err.code === 11000) {
       return next(new Error409('Пользователь с указанным email уже зарегистрирован!'));
@@ -22,7 +22,7 @@ const signin = (req, res, next) => User
       httpOnly: true,
       sameSite: true,
     })
-    .send({ message: 'Вы авторизовались!' }))
+    .send({ message: 'Авторизация прошла успешно!' }))
   .catch(next);
 
 const signout = (req, res) => res.clearCookie('jwt').send({ message: 'Токен удалён' });
