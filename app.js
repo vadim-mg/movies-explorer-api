@@ -23,13 +23,15 @@ mongoose.connect(dataBase, {
 
 const app = express();
 
-app.use(cors);
-app.use(rateLimiter);
-app.use(helmet());
+app.use(
+  cors,
+  requestLogger,
+  rateLimiter,
+  helmet(),
+);
 app.disable('x-powered-by');
 
 app.use(
-  requestLogger,
   json(),
   urlencoded({ extended: true }),
   cookieParser(),
