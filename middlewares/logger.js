@@ -6,6 +6,7 @@ const requestLogger = expressWinston.logger({
   transports: [
     new winston.transports.File({ filename: 'request.log' }),
   ],
+  // requestWhitelist: ['body', 'headers', 'query'],
   format: winston.format.json(),
 });
 

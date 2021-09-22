@@ -1,7 +1,7 @@
 const Movie = require('../models/movie');
 const errors = require('../errors/errors');
 
-const getMovies = (req, res, next) => Movie.find({})
+const getMovies = (req, res, next) => Movie.find({ owner: req.user })
   .populate({
     path: 'owner',
     model: 'User',
